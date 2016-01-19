@@ -21,6 +21,7 @@ public class Bianpai {
 				from("cxf://service2?serviceClass=com.demo.camel.bianpai.Service2&address=http://localhost:8080/service2").log("ok");
 //				from("cxf://serviceInterfacle?serviceClass=com.demo.camel.bianpai.ServiceInterface&address=http://localhost:8080/serviceInterface").to("");
 //				from("").to("");
+
 			}
 		});
 		camelContext.start();
