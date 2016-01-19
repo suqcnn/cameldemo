@@ -24,6 +24,7 @@ public class Bianpai {
 			}
 		});
 		camelContext.start();
+
 		Thread.sleep(1000*1000);
 		camelContext.stop();
 	}
