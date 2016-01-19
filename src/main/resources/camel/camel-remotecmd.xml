@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:camel="http://cxf.apache.org/transports/camel" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+	    http://cxf.apache.org/transports/camel 
+	    http://cxf.apache.org/transports/camel.xsd
+       http://cxf.apache.org/jaxws 
+      http://cxf.apache.org/schemas/jaxws.xsd
+      http://camel.apache.org/schema/cxf 
+	    http://camel.apache.org/schema/cxf/camel-cxf.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd
+       "
+	default-autowire="byName" default-init-method="init">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<!-- <bean id="logProcessor" class="com.demo.camel.log.LogProcessor"></bean> -->
+	<bean id="excecReslutProcessor" class="com.demo.camel.exec.ExcecReslutProcessor"></bean>
+	<bean id="excecTcpRemoteProcessor" class="com.demo.camel.exec.ExcecTcpRemoteProcessor"></bean>
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	<template id="camelTemplate"/>
+	<route id="execLocal">
+			<from uri="direct:execLocal" />
+			<to uri="exec:java?args=-version&amp;workingDir=d:/"/>
+			<!-- <convertBodyTo type="java.lang.String"/> -->
+			<process ref="excecReslutProcessor"></process>
+			<!-- <to uri="log:end===========?showStreams=true&amp;showAll=true"/> -->
+	</route>
+	<route id="execRemote">
+			<from uri="mina:tcp://127.0.0.1:8999?textline=true" />
+			<!-- <to uri="exec:java?args=-version&amp;workingDir=d:/"/> -->
+			<process ref="excecTcpRemoteProcessor"></process>
+			<to uri="log:end===========?showStreams=true&amp;showAll=true"/>
+	</route>
+
+	</camelContext>
+
+
+</beans>
